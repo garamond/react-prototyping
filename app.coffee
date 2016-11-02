@@ -14,15 +14,33 @@ importedLayers = Framer.Importer.load("imported/prototype@1x")
 React =  require('react')
 { renderToString } = require('react-dom/server')
 
-r = (comp, attrs, kids) ->
-  new Layer
-    style:
+class ReactLayer extends Layer
+  constructor: (options) ->
+    super(options)
+    @height = 0
+    @width = 0
+    @style =
       width: 'auto'
       height: 'auto'
       backgroundColor: 'transparent'
-    html: renderToString (React.createElement comp, attrs, kids)
+    { component, props, children } = options
+    # render React component
+    @html = renderToString (React.createElement component, props, children)
+    # connect handlers to Framer events
+    for k,v of props
+      if k.match(/^on/)
+        eventName = k.split(/^on/)[1]
+        try
+          @on(Events[eventName], v)
+        catch
+          throw new Error("No handler found for event #{k} for React component #{component.name}")
 
 # Prototype
 
-button1 = r(Button, {}, "Click me!")
-button1.on(Events.Click, () -> importedLayers.main.visible = !importedLayers.main.visible)
+clickMe = new ReactLayer
+  component: Button
+  props:
+    small: true
+    accent: true
+    onClick: () -> importedLayers.main.visible = !importedLayers.main.visible
+  children: 'Click me!'

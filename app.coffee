@@ -40,7 +40,5 @@ class ReactLayer extends Layer
 clickMe = new ReactLayer
   component: Button
   props:
-    small: true
-    accent: true
     onClick: () -> importedLayers.main.visible = !importedLayers.main.visible
   children: 'Click me!'

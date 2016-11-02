@@ -7,12 +7,12 @@ Framer.Info =
 
 importedLayers = Framer.Importer.load("imported/prototype@1x")
 
-import Button from 'Button'
+{ Button } = require('Button')
 
 # React
 
-import React from 'react'
-import { renderToString } from 'react-dom/server'
+React =  require('react')
+{ renderToString } = require('react-dom/server')
 
 r = (comp, attrs, kids) ->
   new Layer
